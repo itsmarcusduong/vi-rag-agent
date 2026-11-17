@@ -1,0 +1,102 @@
+name: kaggle
+
+# Runs a registered experiment on Kaggle (GPU if the job asks for it) and commits its results.
+# Trigger: push a branch named `kaggle/<job>` (job names: scripts/kaggle_job.py JOBS).
+# Needs the repository secret KAGGLE_API_TOKEN (Kaggle -> Settings -> API -> Create New Token).
+on:
+  push:
+    branches: ["kaggle/**"]
+    paths: ["src/**", "scripts/**", "pyproject.toml", ".github/workflows/kaggle.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  KAGGLE_USER: ${{ vars.KAGGLE_USERNAME || 'minhquangdng' }}
+  POLL_SECONDS: 60
+  MAX_POLLS: 170
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check secret
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          if [ -z "$KAGGLE_API_TOKEN" ]; then
+            echo "::error::Repository secret KAGGLE_API_TOKEN is not set"; exit 1
+          fi
+      - name: Install Kaggle CLI
+        run: pip install --quiet kaggle
+      - name: Build kernel
+        id: build
+        run: |
+          job="${GITHUB_REF_NAME#kaggle/}"
+          echo "job=$job" >> "$GITHUB_OUTPUT"
+          python scripts/kaggle_job.py info --job "$job" --user "$KAGGLE_USER" | tee -a "$GITHUB_OUTPUT"
+          python scripts/kaggle_job.py build --job "$job" --sha "$GITHUB_SHA" --user "$KAGGLE_USER" --out kjob
+          cat kjob/kernel-metadata.json
+      - name: Push kernel
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          if [ "${{ steps.build.outputs.gpu }}" = "true" ]; then
+            kaggle kernels push -p kjob --accelerator NvidiaTeslaT4
+          else
+            kaggle kernels push -p kjob
+          fi
+      - name: Wait for kernel
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+          KERNEL: ${{ steps.build.outputs.kernel }}
+        run: |
+          sleep 30
+          for i in $(seq 1 "$MAX_POLLS"); do
+            status="$(kaggle kernels status "$KERNEL" 2>&1 || true)"
+            echo "[$i] $status"
+            case "$(echo "$status" | tr '[:upper:]' '[:lower:]')" in
+              *complete*) exit 0 ;;
+              *error*|*cancel*|*fail*) echo "::error::Kernel did not complete"; exit 1 ;;
+            esac
+            sleep "$POLL_SECONDS"
+          done
+          echo "::error::Timed out waiting for the kernel"; exit 1
+      - name: Download output
+        if: always()
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          mkdir -p kout
+          kaggle kernels output "${{ steps.build.outputs.kernel }}" -p kout || true
+          find kout -maxdepth 3 -type f | head -50
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kaggle-${{ steps.build.outputs.job }}
+          path: kout/
+      - name: Commit results
+        run: |
+          for out in ${{ steps.build.outputs.outputs }}; do
+            found="$(find kout -type f -name "$(basename "$out")" | head -1)"
+            if [ -z "$found" ]; then echo "::error::Missing output $out"; exit 1; fi
+            cp "$found" "$out"
+            git add "$out"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --cached --quiet; then
+            echo "Results identical to the committed version."
+          else
+            git commit -m "results(${{ steps.build.outputs.job }}): Kaggle run for ${GITHUB_SHA::7}"
+            git push
+          fi

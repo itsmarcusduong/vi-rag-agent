@@ -145,7 +145,7 @@ def main() -> None:
             "python": sys.version.split()[0],
             "platform": platform.platform(),
             "cpu_count": os.cpu_count(),
-            "runner": os.environ.get("RUNNER_NAME", "local"),
+            "runner": os.environ.get("RUNNER_NAME") or os.environ.get("VI_RAG_RUNNER", "local"),
         },
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
