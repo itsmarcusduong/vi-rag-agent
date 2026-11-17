@@ -1,0 +1,48 @@
+name: release
+
+# Publishes a release when a commit titled `chore(release): vX.Y.Z` lands on main
+# (the squash-merge of a release PR). Notes come from the matching CHANGELOG section,
+# plus a link to docs/reports/vX.Y.Z.md when it exists. Any other commit is a no-op.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Detect release commit
+        id: detect
+        env:
+          SUBJECT: ${{ github.event.head_commit.message }}
+        run: |
+          subject="$(printf '%s' "$SUBJECT" | head -n 1)"
+          version="$(python scripts/release_notes.py "$subject" CHANGELOG.md notes.md)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [ -n "$version" ]; then cat notes.md; else echo "Not a release commit."; fi
+      - name: Create tag and release
+        if: steps.detect.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.detect.outputs.version }}
+        run: |
+          tag="v$VERSION"
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            echo "::error::Tag $tag already exists"; exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" -m "Release $tag" "$GITHUB_SHA"
+          git push origin "$tag"
+          prerelease=""
+          case "$VERSION" in 0.*) prerelease="--prerelease" ;; esac
+          gh release create "$tag" --verify-tag --title "$tag" --notes-file notes.md $prerelease

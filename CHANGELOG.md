@@ -5,6 +5,14 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-18
+
+### Added
+- Release automation: merging a PR titled `chore(release): vX.Y.Z` creates the annotated tag and the GitHub Release from this changelog (`.github/workflows/release.yml`, `scripts/release_notes.py`, tested).
+- Milestone reports in `docs/reports/` (M1, M2) with a template and release procedure.
+
+## [0.2.0] - 2026-11-18
+
 ### Added
 - `vi_rag_agent.metrics`: recall@k, precision@k, hit@k, MRR@k, nDCG@k (graded) and `evaluate()` over a run, with hand-computed tests.
 - `metrics.bootstrap_ci`: percentile bootstrap confidence interval over per-query values.

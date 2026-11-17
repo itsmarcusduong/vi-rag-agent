@@ -26,5 +26,6 @@ Trước khi báo "xong" một việc, Claude phải làm đủ các bước sau
 5. **Không đồng ý khi cần**: nếu yêu cầu của người dùng có rủi ro hoặc có cách tốt hơn, nói rõ trước khi làm.
 
 ## Quy trình GitHub
-Milestone -> issue (template Task/Experiment) -> nhánh `feat/...` -> PR (`Closes #n`, điền đủ template) -> review -> squash-merge -> tag `v0.N.0` + Release.
+Milestone -> issue (template Task/Experiment) -> nhánh `feat/...` -> PR (`Closes #n`, điền đủ template) -> review -> squash-merge.
+Đóng milestone: viết `docs/reports/vX.Y.0.md`, chuyển CHANGELOG, mở PR `chore(release): vX.Y.Z`; workflow `release` tự tạo tag + Release (xem `docs/reports/README.md`).
 Commit theo Conventional Commits. Không push thẳng vào `main`. Lịch sử git trung thực, không backdate.
