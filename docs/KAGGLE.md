@@ -26,3 +26,10 @@ must write its results under `results/` and record the commit and environment.
   run the script, and copy only the declared result files to the Kaggle output.
 - The kernel log is attached to the workflow run as an artifact (`kaggle-<job>`).
 - GPU quota is the account's weekly free Kaggle quota; CPU jobs do not use it.
+
+## Verification (2026-11-18)
+The M2 BM25 job was re-run on Kaggle through this bridge (workflow run 44174860471, code `dae128c`,
+Python 3.13 on Kaggle vs 3.12 on GitHub Actions). Every metric, confidence interval and gold-rank
+bucket in [`results/repro/m2_bm25_kaggle.json`](../results/repro/m2_bm25_kaggle.json) is identical to
+[`results/m2_bm25.json`](../results/m2_bm25.json); only timings and environment differ. This checks
+both the bridge and the reproducibility of M2.
