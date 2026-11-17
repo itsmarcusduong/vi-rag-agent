@@ -88,6 +88,12 @@ def main() -> None:
     for split in EVAL_SPLITS:
         for answerable in (True, False):
             queries, qrels = bench.subset(split, answerable)
+            key = f"{split}/{'answerable' if answerable else 'unanswerable'}"
+            if not queries:
+                # e.g. the HF test split carries no unanswerable questions; record, don't crash.
+                results[key] = {"n_queries": 0, "note": "no questions in this subset"}
+                print(key, "empty", flush=True)
+                continue
             run, latencies = {}, []
             for qid, question in queries.items():
                 t = time.perf_counter()
@@ -102,7 +108,6 @@ def main() -> None:
                 ]
                 for name in ("recall@5", "recall@10", "mrr@10")
             }
-            key = f"{split}/{'answerable' if answerable else 'unanswerable'}"
             results[key] = {
                 **evaluation.to_dict(),
                 "metrics": {k: round(v, 4) for k, v in evaluation.metrics.items()},
