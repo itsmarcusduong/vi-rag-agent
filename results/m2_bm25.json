@@ -1,0 +1,207 @@
+{
+  "experiment": "m2_bm25",
+  "description": "BM25 passage retrieval on UIT-ViQuAD 2.0 (gold: the source passage)",
+  "created_utc": "2026-11-17T20:13:05+00:00",
+  "git_commit": "bc8476d8d6d1df2797f9debc7fb774beac48dcc1",
+  "package_version": "0.1.0",
+  "dataset": {
+    "hf_id": "taidng/UIT-ViQuAD2.0",
+    "n_passages": 5317,
+    "n_titles": 184,
+    "passages_in_more_than_one_split": 582,
+    "splits": {
+      "train": {
+        "questions": 28454,
+        "answerable": 19238,
+        "unanswerable": 9216,
+        "passages": 4101
+      },
+      "validation": {
+        "questions": 3814,
+        "answerable": 2653,
+        "unanswerable": 1161,
+        "passages": 557
+      },
+      "test": {
+        "questions": 7301,
+        "answerable": 7301,
+        "unanswerable": 0,
+        "passages": 1241
+      }
+    }
+  },
+  "retriever": {
+    "name": "bm25",
+    "k1": 1.5,
+    "b": 0.75,
+    "idf": "lucene: ln(1 + (N - n + 0.5) / (n + 0.5))",
+    "tokenization": "NFC, lowercase, \\w+ syllables, no stopwords, no word segmentation",
+    "query_terms": "unique",
+    "vocab_size": 20528,
+    "avg_doc_len_tokens": 178.54
+  },
+  "protocol": "parameters fixed before running; no tuning; metrics are means over queries",
+  "results": {
+    "validation/answerable": {
+      "metrics": {
+        "recall@1": 0.663,
+        "recall@5": 0.8556,
+        "recall@10": 0.8997,
+        "recall@20": 0.9329,
+        "recall@100": 0.9744,
+        "hit@1": 0.663,
+        "hit@5": 0.8556,
+        "hit@10": 0.8997,
+        "hit@20": 0.9329,
+        "hit@100": 0.9744,
+        "mrr@10": 0.7439,
+        "ndcg@10": 0.7818
+      },
+      "n_queries": 2653,
+      "n_skipped_no_relevant": 0,
+      "n_missing_from_run": 0,
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.8417,
+          0.87
+        ],
+        "recall@10": [
+          0.8881,
+          0.9114
+        ],
+        "mrr@10": [
+          0.7289,
+          0.7587
+        ]
+      },
+      "latency_ms": {
+        "p50": 0.355,
+        "p95": 0.387
+      },
+      "gold_rank_buckets": {
+        "1": 1759,
+        "2-5": 511,
+        "6-10": 117,
+        "11-100": 198,
+        ">100 or no lexical match": 68
+      },
+      "query_length_vs_hit": {
+        "hit@10_mean_len": 14.59,
+        "miss@10_mean_len": 12.76,
+        "n_miss@10": 266
+      }
+    },
+    "validation/unanswerable": {
+      "metrics": {
+        "recall@1": 0.596,
+        "recall@5": 0.7855,
+        "recall@10": 0.8432,
+        "recall@20": 0.8923,
+        "recall@100": 0.9552,
+        "hit@1": 0.596,
+        "hit@5": 0.7855,
+        "hit@10": 0.8432,
+        "hit@20": 0.8923,
+        "hit@100": 0.9552,
+        "mrr@10": 0.6771,
+        "ndcg@10": 0.7172
+      },
+      "n_queries": 1161,
+      "n_skipped_no_relevant": 0,
+      "n_missing_from_run": 0,
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.7631,
+          0.8088
+        ],
+        "recall@10": [
+          0.8217,
+          0.863
+        ],
+        "mrr@10": [
+          0.653,
+          0.6997
+        ]
+      },
+      "latency_ms": {
+        "p50": 0.357,
+        "p95": 0.392
+      },
+      "gold_rank_buckets": {
+        "1": 692,
+        "2-5": 220,
+        "6-10": 67,
+        "11-100": 130,
+        ">100 or no lexical match": 52
+      },
+      "query_length_vs_hit": {
+        "hit@10_mean_len": 14.35,
+        "miss@10_mean_len": 12.34,
+        "n_miss@10": 182
+      }
+    },
+    "test/answerable": {
+      "metrics": {
+        "recall@1": 0.6288,
+        "recall@5": 0.8354,
+        "recall@10": 0.8829,
+        "recall@20": 0.9218,
+        "recall@100": 0.9743,
+        "hit@1": 0.6288,
+        "hit@5": 0.8354,
+        "hit@10": 0.8829,
+        "hit@20": 0.9218,
+        "hit@100": 0.9743,
+        "mrr@10": 0.7166,
+        "ndcg@10": 0.7571
+      },
+      "n_queries": 7301,
+      "n_skipped_no_relevant": 0,
+      "n_missing_from_run": 0,
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.8267,
+          0.8434
+        ],
+        "recall@10": [
+          0.8755,
+          0.8899
+        ],
+        "mrr@10": [
+          0.7071,
+          0.7252
+        ]
+      },
+      "latency_ms": {
+        "p50": 0.35,
+        "p95": 0.386
+      },
+      "gold_rank_buckets": {
+        "1": 4591,
+        "2-5": 1508,
+        "6-10": 347,
+        "11-100": 667,
+        ">100 or no lexical match": 188
+      },
+      "query_length_vs_hit": {
+        "hit@10_mean_len": 14.69,
+        "miss@10_mean_len": 12.65,
+        "n_miss@10": 855
+      }
+    },
+    "test/unanswerable": {
+      "n_queries": 0,
+      "note": "no questions in this subset"
+    }
+  },
+  "timing_s": {
+    "load": 4.87,
+    "index": 0.344
+  },
+  "environment": {
+    "python": "3.12.16",
+    "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+    "cpu_count": 4,
+    "runner": "GitHub Actions 1000000055"
+  }
+}
