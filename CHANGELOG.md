@@ -5,6 +5,9 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Kaggle bridge: push a `kaggle/<job>` branch and GitHub Actions runs the job on Kaggle at that commit and commits its results (`.github/workflows/kaggle.yml`, `scripts/kaggle_job.py`).
+
 ## [0.2.1] - 2026-11-18
 
 ### Added
