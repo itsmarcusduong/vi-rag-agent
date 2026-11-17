@@ -6,7 +6,8 @@ name: eval
 on:
   push:
     branches: ["results/**"]
-    paths-ignore: ["results/*.json"]
+    # Re-run only when code that affects results changes (docs edits must not churn results).
+    paths: ["src/**", "scripts/**", "pyproject.toml"]
   workflow_dispatch:
 
 permissions:

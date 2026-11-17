@@ -12,6 +12,7 @@ versioning: [SemVer](https://semver.org/).
 - `vi_rag_agent.bm25`: vectorised Okapi BM25 (Lucene idf, deterministic tie-breaking), tested against a loop implementation of the formula.
 - `vi_rag_agent.data`: UIT-ViQuAD 2.0 to passage-retrieval benchmark (dedup, stable IDs, answerable/unanswerable subsets).
 - `scripts/run_bm25.py` and the `eval` workflow: run the M2 baseline on GitHub Actions and commit `results/m2_bm25.json`.
+- M2 baseline results (BM25 on UIT-ViQuAD 2.0) in the README, with bootstrap confidence intervals and documented data caveats.
 
 ## [0.1.0] - 2026-11-18
 

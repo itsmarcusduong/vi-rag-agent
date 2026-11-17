@@ -24,12 +24,23 @@ question ──► query rewrite ──► retriever ──► reranker ──�
 
 ## Results
 
-| Retriever | recall@5 | MRR | nDCG@10 | p50 latency |
-|---|---|---|---|---|
-| BM25 | not measured | not measured | not measured | not measured |
-| Dense (Vietnamese SBERT + FAISS) | not measured | not measured | not measured | not measured |
-| Hybrid (RRF) | not measured | not measured | not measured | not measured |
-| Hybrid + reranker | not measured | not measured | not measured | not measured |
+Passage retrieval on UIT-ViQuAD 2.0: 5,317 unique passages from
+184 Wikipedia articles; the gold document is the passage each question was written
+on. Numbers are copied from [`results/m2_bm25.json`](results/m2_bm25.json) (run on GitHub Actions,
+commit `bc8476d`); 95% intervals are percentile bootstrap over queries.
+
+| Retriever | Split (n) | recall@1 | recall@5 [95% CI] | recall@10 | MRR@10 | nDCG@10 | p50 latency |
+|---|---|---|---|---|---|---|---|
+| BM25 (k1=1.5, b=0.75) | validation (2,653) | 0.663 | 0.856 [0.842-0.870] | 0.900 | 0.744 | 0.782 | 0.35 ms |
+| BM25 (k1=1.5, b=0.75) | test (7,301) | 0.629 | 0.835 [0.827-0.843] | 0.883 | 0.717 | 0.757 | 0.35 ms |
+| Dense (Vietnamese SBERT + FAISS) | | not measured | not measured | not measured | not measured | not measured | not measured |
+| Hybrid (RRF) | | not measured | not measured | not measured | not measured | not measured | not measured |
+| Hybrid + reranker | | not measured | not measured | not measured | not measured | not measured | not measured |
+
+Validation uses answerable questions only. The test split as published on the Hugging Face mirror
+marks every question as answerable, so the test row covers all its questions. Caveats: the corpus is
+small (latency is not representative of a large index), and only one passage counts as correct even
+when another passage of the same article also contains the answer, so recall is a lower bound.
 
 ## Quick start (development)
 
