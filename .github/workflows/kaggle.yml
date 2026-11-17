@@ -6,7 +6,8 @@ name: kaggle
 on:
   push:
     branches: ["kaggle/**"]
-    paths: ["src/**", "scripts/**", "pyproject.toml", ".github/workflows/kaggle.yml"]
+    # No `paths` filter: a new kaggle/<job> branch cut from main has no changed files and would be
+    # skipped. The results commit pushed by this workflow uses GITHUB_TOKEN and does not re-trigger.
 
 permissions:
   contents: write
