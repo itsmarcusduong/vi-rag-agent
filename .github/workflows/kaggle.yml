@@ -38,7 +38,8 @@ jobs:
             echo "::error::Repository secret KAGGLE_API_TOKEN is not set"; exit 1
           fi
       - name: Install Kaggle CLI
-        run: pip install --quiet kaggle
+        # kaggle 2.2.5 imports `six` without declaring it; pin both so the CLI cannot break silently.
+        run: pip install --quiet "kaggle==2.2.5" six
       - name: Build kernel
         id: build
         run: |
