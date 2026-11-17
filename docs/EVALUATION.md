@@ -4,7 +4,17 @@ Rules fixed **before** running experiments, so results cannot be tuned after the
 
 ## Data
 - Public datasets only. Record name, URL, version/commit, license and any restriction here before use.
-  License status of every candidate dataset: **not yet verified**.
+
+| Dataset | Source | License (as found) | Use here |
+|---|---|---|---|
+| UIT-ViQuAD 2.0 | HF mirror `taidng/UIT-ViQuAD2.0`; papers: Nguyen et al., COLING 2020; VLSP 2021 ViMRC | No license on the HF mirror. v1.0 is listed as CC BY-NC-SA 4.0 in the BigScience ROOTS catalogue; the UIT site was not checked. **Not fully verified.** Treated as non-commercial, share-alike, with attribution | Passages and questions downloaded at run time; never committed |
+
+### Retrieval benchmark built from UIT-ViQuAD 2.0 (M2)
+- Corpus: unique passages from train, validation and test (exact NFC text dedup, SHA-1 based IDs).
+- Queries: validation and test questions. Gold: the passage the question was written on (binary).
+- Headline numbers use answerable questions; unanswerable questions are reported separately.
+- Limitation: one gold passage per question. A different passage of the same article may also contain
+  the answer; such retrievals count as misses, so scores are a lower bound.
 - Split once, with a fixed seed, into train / dev / test. Tune on dev only. Report test once per final config.
 - No test question or its gold passage may appear in the retrieval index used for tuning.
 

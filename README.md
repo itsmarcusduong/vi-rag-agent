@@ -3,9 +3,9 @@
 Vietnamese retrieval-augmented generation (RAG) and agentic question answering, built so that every
 claim comes with a measurement.
 
-> **Status: work in progress (v0.1.0, scaffold).** The repository currently contains tooling, CI and a
-> tested chunking module. **No retrieval or answer-quality numbers exist yet**; the results table below
-> is filled in only from real runs (see [docs/EVALUATION.md](docs/EVALUATION.md)).
+> **Status: work in progress (M2).** Tested chunking, metrics and BM25 modules. Numbers in the table
+> below are filled in only from real runs committed under `results/` (see
+> [docs/EVALUATION.md](docs/EVALUATION.md)).
 
 ## Goals
 
