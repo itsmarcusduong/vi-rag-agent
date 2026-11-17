@@ -64,9 +64,10 @@ docs/               roadmap and evaluation protocol
 .github/            CI workflow, PR and issue templates
 ```
 
-## Roadmap
+## Roadmap and reports
 
-See [docs/ROADMAP.md](docs/ROADMAP.md). Work is tracked as GitHub milestones, issues and pull requests;
+See [docs/ROADMAP.md](docs/ROADMAP.md). Each finished milestone has a report in
+[docs/reports/](docs/reports/) (data, method, results with confidence intervals, threats to validity). Work is tracked as GitHub milestones, issues and pull requests;
 releases are tagged with semantic versions (`v0.N.0` per milestone, `v1.0.0` when complete).
 
 ## Data and licenses
