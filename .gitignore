@@ -221,3 +221,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- vi-rag-agent project ---
+data/
+indexes/
+*.faiss
+*.pth
+*.safetensors
+.env
+.env.*
+!.env.example
+results/tmp/

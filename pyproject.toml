@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "vi-rag-agent"
+version = "0.1.0"
+description = "Vietnamese RAG and agentic QA with measured retrieval quality (recall@k, MRR) on public data."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Duong Minh Quang" }]
+dependencies = []
+
+[project.optional-dependencies]
+retrieval = ["numpy", "rank-bm25", "faiss-cpu", "sentence-transformers"]
+agent = ["langgraph", "langchain-core"]
+api = ["fastapi", "uvicorn[standard]", "pydantic"]
+dev = ["pytest", "pytest-cov", "ruff"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vi_rag_agent"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
