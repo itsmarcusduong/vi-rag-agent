@@ -5,6 +5,10 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `vi_rag_agent.dense`: exact cosine search over L2-normalised embeddings (NumPy or FAISS `IndexFlatIP`, identical results incl. ties) and per-model input handling (`ENCODERS`: e5 prefixes, word segmentation for the BKAI PhoBERT bi-encoder).
+- `vi_rag_agent.fusion`: reciprocal rank fusion with deterministic tie-breaking.
+
 ## [0.2.1] - 2026-11-18
 
 ### Added
