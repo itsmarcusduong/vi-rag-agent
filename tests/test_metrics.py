@@ -5,6 +5,7 @@ import math
 import pytest
 
 from vi_rag_agent.metrics import (
+    bootstrap_ci,
     evaluate,
     hit_at_k,
     ndcg_at_k,
@@ -112,3 +113,27 @@ def test_evaluate_means_skips_and_missing():
 def test_evaluate_without_any_relevant_query_raises():
     with pytest.raises(ValueError):
         evaluate({"q": ["a"]}, {"q": {"a": 0}})
+
+
+def test_bootstrap_ci_constant_values_has_zero_width():
+    assert bootstrap_ci([0.5] * 20) == (0.5, 0.5)
+
+
+def test_bootstrap_ci_contains_mean_is_deterministic_and_shrinks_with_n():
+    small = [1.0, 0.0] * 10
+    large = [1.0, 0.0] * 1000
+    low_s, high_s = bootstrap_ci(small, seed=1)
+    low_l, high_l = bootstrap_ci(large, seed=1)
+    assert low_s <= 0.5 <= high_s
+    assert low_l <= 0.5 <= high_l
+    assert (high_l - low_l) < (high_s - low_s)
+    assert bootstrap_ci(small, seed=1) == (low_s, high_s)
+    # Binomial standard error for n=2000, p=0.5 is ~0.0112, so a 95% interval is ~±0.022
+    assert 0.03 < high_l - low_l < 0.06
+
+
+def test_bootstrap_ci_rejects_bad_input():
+    with pytest.raises(ValueError):
+        bootstrap_ci([])
+    with pytest.raises(ValueError):
+        bootstrap_ci([1.0], confidence=1.0)

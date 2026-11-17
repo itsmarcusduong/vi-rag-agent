@@ -147,3 +147,25 @@ def evaluate(
     names = next(iter(per_query.values())).keys()
     means = {name: sum(s[name] for s in per_query.values()) / len(per_query) for name in names}
     return EvaluationResult(means, per_query, len(per_query), skipped, missing)
+
+
+def bootstrap_ci(
+    values: Sequence[float], n_resamples: int = 2000, confidence: float = 0.95, seed: int = 0
+) -> tuple[float, float]:
+    """Percentile bootstrap confidence interval for the mean of per-query values.
+
+    Resamples queries with replacement; deterministic for a given ``seed``.
+    """
+    import numpy as np
+
+    if not values:
+        raise ValueError("values is empty")
+    if not 0 < confidence < 1:
+        raise ValueError("confidence must be in (0, 1)")
+    data = np.asarray(values, dtype=float)
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(data), size=(n_resamples, len(data)))
+    means = data[idx].mean(axis=1)
+    alpha = (1 - confidence) / 2
+    low, high = np.quantile(means, [alpha, 1 - alpha])
+    return float(low), float(high)

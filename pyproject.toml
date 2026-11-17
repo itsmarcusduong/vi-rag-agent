@@ -13,7 +13,8 @@ authors = [{ name = "Duong Minh Quang" }]
 dependencies = []
 
 [project.optional-dependencies]
-retrieval = ["numpy", "rank-bm25", "faiss-cpu", "sentence-transformers"]
+retrieval = ["numpy>=1.24", "scipy>=1.10"]
+data = ["datasets>=2.18"]
 agent = ["langgraph", "langchain-core"]
 api = ["fastapi", "uvicorn[standard]", "pydantic"]
 dev = ["pytest", "pytest-cov", "ruff"]
@@ -28,6 +29,9 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/*" = ["E731"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
