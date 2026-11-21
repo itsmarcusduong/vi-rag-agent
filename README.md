@@ -58,7 +58,8 @@ Findings: hybrid BM25 + multilingual-e5-base beats BM25 on validation and on bot
 paired intervals that exclude zero. e5 alone ties BM25 on validation MRR (slightly ahead on recall@10) and is slightly
 ahead on test. The two
 Vietnamese PhoBERT-based encoders are below BM25 here; see [the M3 report](docs/reports/v0.3.0.md) for why
-that comparison may be unfair to them. Caveats: small corpus, one gold passage per question (recall is a
+that comparison may be unfair to them (confirmed in [M3.1](docs/reports/v0.3.1.md): word segmentation lifts vietnamese-sbert
+from 0.420 to 0.510 MRR@10, still below BM25; tuning RRF to k = 10 adds +0.006 MRR on test). Caveats: small corpus, one gold passage per question (recall is a
 lower bound), and the test split marks every question as answerable.
 
 ## Quick start (development)

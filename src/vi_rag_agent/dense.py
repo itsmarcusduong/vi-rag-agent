@@ -33,7 +33,10 @@ class EncoderSpec:
 
 
 ENCODERS: dict[str, EncoderSpec] = {
-    "vietnamese-sbert": EncoderSpec("keepitreal/vietnamese-sbert", max_seq_length=256),
+    # PhoBERT vocabulary: needs word-segmented input (M3.1 ablation, #18). M3 used raw text.
+    "vietnamese-sbert": EncoderSpec(
+        "keepitreal/vietnamese-sbert", word_segment=True, max_seq_length=256
+    ),
     "bkai-bi-encoder": EncoderSpec(
         "bkai-foundation-models/vietnamese-bi-encoder",
         word_segment=True,

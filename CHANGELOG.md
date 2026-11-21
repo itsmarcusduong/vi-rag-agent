@@ -9,6 +9,13 @@ versioning: [SemVer](https://semver.org/).
 - `scripts/run_ablation_m3.py` (Kaggle job `m3_ablation`, #18): word segmentation for vietnamese-sbert and an RRF k/weight grid.
 - Kaggle workflow: a commit whose message contains the skip marker (see `docs/KAGGLE.md`) does not start a GPU run.
 
+### Changed
+- `ENCODERS["vietnamese-sbert"]` now uses word segmentation (M3 results were produced with raw text).
+
+### Results
+- Word segmentation lifts vietnamese-sbert validation MRR@10 from 0.420 to 0.510 (still below BM25 0.744).
+- RRF k = 10 (equal weights) beats the M3 default k = 60 on test by +0.006 MRR@10 [95% CI +0.004, +0.007]; adopted from M4 on.
+
 ## [0.3.0] - 2026-11-21
 
 M3: dense and hybrid retrieval. Report: `docs/reports/v0.3.0.md`.
