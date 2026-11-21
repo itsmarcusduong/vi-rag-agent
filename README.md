@@ -86,7 +86,8 @@ docs/               roadmap and evaluation protocol
 
 ## Roadmap and reports
 
-See [docs/ROADMAP.md](docs/ROADMAP.md). Each finished milestone has a report in
+See [PLAN.md](PLAN.md) (milestones and done criteria), [docs/decisions/](docs/decisions/) (ADRs) and
+[docs/protocols/](docs/protocols/) (experiment protocols, merged before each run). Each finished milestone has a report in
 [docs/reports/](docs/reports/) (data, method, results with confidence intervals, threats to validity). Work is tracked as GitHub milestones, issues and pull requests;
 releases are tagged with semantic versions (`v0.N.0` per milestone, `v1.0.0` when complete).
 

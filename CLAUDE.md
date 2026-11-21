@@ -25,7 +25,13 @@ Trước khi báo "xong" một việc, Claude phải làm đủ các bước sau
 4. **Gợi ý**: đề xuất ít nhất 2 hướng cải thiện kèm chi phí/lợi ích; nêu lựa chọn thay thế đã cân nhắc.
 5. **Không đồng ý khi cần**: nếu yêu cầu của người dùng có rủi ro hoặc có cách tốt hơn, nói rõ trước khi làm.
 
+## Quy trình (ADR-0004)
+Kế hoạch: `PLAN.md`. Quyết định: `docs/decisions/`. Giao thức thí nghiệm: `docs/protocols/` (merge vào `main` trước khi chạy).
+Cổng tái tạo: script thí nghiệm mới phải tái tạo số tham chiếu của milestone trước, lệch thì dừng.
+Test chỉ chạy một lần khi đóng milestone, cho cấu hình đã chọn trên validation (ADR-0001).
+
 ## Quy trình GitHub
-Milestone -> issue (template Task/Experiment) -> nhánh `feat/...` -> PR (`Closes #n`, điền đủ template) -> review -> squash-merge.
+Milestone -> issue (tiêu chí xong) -> nhánh `issue-<n>-<chủ-đề>` (job GPU: `kaggle/<job>`) -> commit `<type>(scope): ... (#n)` -> PR (`Closes/Refs #n`, Summary · Changes · Evidence/Checks · Limitations) -> tự review + review đối lập nếu có ADR/giao thức -> squash-merge.
+Commit do Duong Minh Quang làm tác giả, không Co-Authored-By; PR/issue không có footer "generated".
 Đóng milestone: viết `docs/reports/vX.Y.0.md`, chuyển CHANGELOG, mở PR `chore(release): vX.Y.Z`; workflow `release` tự tạo tag + Release (xem `docs/reports/README.md`).
 Commit theo Conventional Commits. Không push thẳng vào `main`. Lịch sử git trung thực, không backdate.

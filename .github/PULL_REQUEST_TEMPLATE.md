@@ -6,25 +6,20 @@ Closes #
 ## Changes
 -
 
-## How it was verified
-<!-- Commands run and their outcome. Paste real output, not "should work". -->
+## Evidence / Checks
+<!-- Commands run and their real output; results files with commit and run ID. -->
 - [ ] `ruff check .` and `ruff format --check .`
 - [ ] `pytest`
-- [ ] Numbers in this PR come from `results/*.json` produced by an actual run
+- [ ] Numbers come from `results/*.json` of an actual run (link it)
+- [ ] For experiments: protocol in `docs/protocols/` was merged before the run; reproduction gate passed
 
-## Results (if applicable)
-<!-- Table or figure; link the results file and the exact commit/config. -->
+## Self-review and adversarial review
+<!-- Leakage, fair baseline, sample size, and three ways the conclusion could be wrong. -->
 
-## Self-review and critique
-- Data leakage considered (split before features/tuning)?
-- Fair baseline and comparison?
-- Sample size / uncertainty stated?
-- Known limitations and what I did NOT verify:
-
-## Alternatives considered / follow-ups
--
+## Limitations
+<!-- What was not verified; what the numbers do not show. -->
 
 ## Checklist
 - [ ] No data, secrets, `.env`, checkpoints or indexes committed
-- [ ] Docs / CHANGELOG updated
-- [ ] Conventional Commit title
+- [ ] Docs / CHANGELOG updated (ADR if a rule or architecture changed)
+- [ ] Conventional Commit title with `(#n)`
