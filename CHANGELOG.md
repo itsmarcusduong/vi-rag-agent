@@ -5,6 +5,10 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `scripts/run_ablation_m3.py` (Kaggle job `m3_ablation`, #18): word segmentation for vietnamese-sbert and an RRF k/weight grid.
+- Kaggle workflow: a commit whose message contains the skip marker (see `docs/KAGGLE.md`) does not start a GPU run.
+
 ## [0.3.0] - 2026-11-21
 
 M3: dense and hybrid retrieval. Report: `docs/reports/v0.3.0.md`.
