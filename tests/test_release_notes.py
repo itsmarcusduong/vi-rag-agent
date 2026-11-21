@@ -77,3 +77,23 @@ def test_main_writes_notes_and_skips_non_release(tmp_path, capsys, monkeypatch):
     assert capsys.readouterr().out.strip() == "0.2.1"
     text = out.read_text(encoding="utf-8")
     assert text.startswith("### Added") and "docs/reports/v0.2.1.md" in text
+
+
+def test_check_newer_accepts_greater_and_rejects_older_or_equal():
+    tags = ["v0.1.0", "v0.2.0", "v0.2.1", "not-a-version", "v0.10.0-rc1"]
+    release_notes.check_newer("0.3.0", tags)
+    release_notes.check_newer("0.2.2", tags)
+    release_notes.check_newer("1.0.0", [])
+    for bad in ("0.2.1", "0.2.0", "0.1.9"):
+        with pytest.raises(ValueError, match="not greater"):
+            release_notes.check_newer(bad, tags)
+    # numeric, not lexicographic: the latest of v0.9.0 and v0.10.0 is v0.10.0, so 0.9.5 is too old
+    with pytest.raises(ValueError):
+        release_notes.check_newer("0.9.5", ["v0.9.0", "v0.10.0"])
+
+
+def test_main_rejects_non_increasing_version(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "CHANGELOG.md").write_text(CHANGELOG, encoding="utf-8")
+    with pytest.raises(ValueError):
+        release_notes.main(["chore(release): v0.2.1", "CHANGELOG.md", "n.md", "v0.2.1"])

@@ -5,12 +5,21 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-21
+
+M3: dense and hybrid retrieval. Report: `docs/reports/v0.3.0.md`.
+
+### Results
+- Hybrid BM25 + multilingual-e5-base (RRF): test MRR@10 0.776 vs 0.717 for BM25 (paired ΔMRR +0.059, 95% CI [+0.053, +0.065]); on test questions with passages unseen in train, +0.067 [+0.060, +0.074].
+- e5-base alone vs BM25 is inconclusive on validation; both PhoBERT-based encoders trail BM25.
+
 ### Added
 - `results/repro/m2_bm25_kaggle.json`: M2 re-run on Kaggle via the bridge; all metrics identical to the GitHub Actions run.
 - Kaggle bridge: push a `kaggle/<job>` branch and GitHub Actions runs the job on Kaggle at that commit and commits its results (`.github/workflows/kaggle.yml`, `scripts/kaggle_job.py`).
 - `vi_rag_agent.dense`: exact cosine search over L2-normalised embeddings (NumPy or FAISS `IndexFlatIP`, identical results incl. ties) and per-model input handling (`ENCODERS`: e5 prefixes, word segmentation for the BKAI PhoBERT bi-encoder).
 - `vi_rag_agent.fusion`: reciprocal rank fusion with deterministic tie-breaking.
 - `metrics.paired_difference`: paired bootstrap comparison of two systems on the same queries.
+- Release workflow refuses a version that is not greater than the latest tag.
 - `scripts/run_dense.py` (Kaggle job `m3_dense`): three pre-registered encoders and RRF hybrids; results in `results/m3_dense.json`, report in `docs/reports/v0.3.0.md`.
 
 ## [0.2.1] - 2026-11-18

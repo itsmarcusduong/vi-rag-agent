@@ -4,8 +4,9 @@
 version. ``changelog_section`` returns the body of ``## [X.Y.Z]`` in a Keep a Changelog file.
 Both fail loudly: a release must never be published with empty or wrong notes.
 
-CLI: ``python scripts/release_notes.py "<commit subject>" CHANGELOG.md out.md`` prints the version
-(or nothing if the commit is not a release) and writes the notes to ``out.md``.
+CLI: ``python scripts/release_notes.py "<commit subject>" CHANGELOG.md out.md [existing tags...]``
+prints the version (or nothing if the commit is not a release), refuses a version that is not
+greater than every existing tag, and writes the notes to ``out.md``.
 """
 
 from __future__ import annotations
@@ -37,11 +38,26 @@ def changelog_section(changelog: str, version: str) -> str:
     return body
 
 
+def version_tuple(version: str) -> tuple[int, int, int]:
+    major, minor, patch = (int(x) for x in version.split("."))
+    return major, minor, patch
+
+
+def check_newer(version: str, existing_tags: list[str]) -> None:
+    """Refuse a version that is not strictly greater than every existing ``vX.Y.Z`` tag."""
+    existing = [t[1:] for t in existing_tags if re.fullmatch(r"v\d+\.\d+\.\d+", t)]
+    if existing:
+        latest = max(existing, key=version_tuple)
+        if version_tuple(version) <= version_tuple(latest):
+            raise ValueError(f"version {version} is not greater than the latest tag v{latest}")
+
+
 def main(argv: list[str]) -> int:
-    subject, changelog_path, out_path = argv
+    subject, changelog_path, out_path, *tags = argv
     version = parse_release_title(subject)
     if version is None:
         return 0
+    check_newer(version, tags)
     notes = changelog_section(Path(changelog_path).read_text(encoding="utf-8"), version)
     report = Path(f"docs/reports/v{version}.md")
     if report.exists():
