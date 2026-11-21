@@ -9,6 +9,7 @@ from vi_rag_agent.metrics import (
     evaluate,
     hit_at_k,
     ndcg_at_k,
+    paired_difference,
     precision_at_k,
     recall_at_k,
     reciprocal_rank,
@@ -137,3 +138,24 @@ def test_bootstrap_ci_rejects_bad_input():
         bootstrap_ci([])
     with pytest.raises(ValueError):
         bootstrap_ci([1.0], confidence=1.0)
+
+
+def test_paired_difference_counts_and_mean():
+    a = {"q1": {"m": 1.0}, "q2": {"m": 0.0}, "q3": {"m": 0.5}, "only_a": {"m": 1.0}}
+    b = {"q1": {"m": 1.0}, "q2": {"m": 1.0}, "q3": {"m": 0.0}, "only_b": {"m": 0.0}}
+    out = paired_difference(a, b, "m")
+    # shared q1..q3: diffs 0, +1, -0.5 -> mean 1/6
+    assert out["n"] == 3
+    assert out["mean_diff"] == pytest.approx(1 / 6)
+    assert (out["b_better"], out["a_better"], out["tied"]) == (1, 1, 1)
+    assert out["ci95"][0] <= out["mean_diff"] <= out["ci95"][1]
+
+
+def test_paired_difference_identical_systems_is_zero():
+    a = {f"q{i}": {"m": i / 10} for i in range(10)}
+    assert paired_difference(a, a, "m")["ci95"] == [0.0, 0.0]
+
+
+def test_paired_difference_without_shared_queries_raises():
+    with pytest.raises(ValueError):
+        paired_difference({"a": {"m": 1.0}}, {"b": {"m": 1.0}}, "m")

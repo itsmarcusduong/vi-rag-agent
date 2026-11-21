@@ -10,6 +10,8 @@ versioning: [SemVer](https://semver.org/).
 - Kaggle bridge: push a `kaggle/<job>` branch and GitHub Actions runs the job on Kaggle at that commit and commits its results (`.github/workflows/kaggle.yml`, `scripts/kaggle_job.py`).
 - `vi_rag_agent.dense`: exact cosine search over L2-normalised embeddings (NumPy or FAISS `IndexFlatIP`, identical results incl. ties) and per-model input handling (`ENCODERS`: e5 prefixes, word segmentation for the BKAI PhoBERT bi-encoder).
 - `vi_rag_agent.fusion`: reciprocal rank fusion with deterministic tie-breaking.
+- `metrics.paired_difference`: paired bootstrap comparison of two systems on the same queries.
+- `scripts/run_dense.py` (Kaggle job `m3_dense`): three pre-registered encoders and RRF hybrids; results in `results/m3_dense.json`, report in `docs/reports/v0.3.0.md`.
 
 ## [0.2.1] - 2026-11-18
 
