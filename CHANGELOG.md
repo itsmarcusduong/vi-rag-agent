@@ -5,6 +5,12 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- `PLAN.md`, `docs/decisions/` (ADR-0001 to ADR-0004), `docs/protocols/`: solo-project workflow with protocols merged before runs (#21).
+
+### Changed
+- Branch, commit and PR conventions (ADR-0004); PR template sections: Summary, Changes, Evidence/Checks, Self-review, Limitations.
+
 ## [0.3.1] - 2026-11-21
 
 M3.1: ablations of the M3 retrievers. Report: `docs/reports/v0.3.1.md`.

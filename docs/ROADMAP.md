@@ -1,5 +1,7 @@
 # Roadmap
 
+> Milestones and done criteria now live in [PLAN.md](../PLAN.md) (ADR-0004). The table below is the original M1 plan, kept for history; the porting notes still apply.
+
 Each milestone ends with a tag and a GitHub Release. A milestone is closed only when its numbers come from a
 real run and are committed under `results/`. Everything below is **planned**, not done.
 
