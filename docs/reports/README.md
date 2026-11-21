@@ -9,6 +9,7 @@ When a release PR is merged, the release workflow links the matching report from
 | M1 Scaffold | v0.1.0 | [v0.1.0.md](v0.1.0.md) | tooling, CI, tested chunker |
 | M2 Evaluation harness and BM25 | v0.2.0 | [v0.2.0.md](v0.2.0.md) | BM25 on UIT-ViQuAD 2.0 validation: recall@5 0.856, MRR@10 0.744 |
 | M3 Dense and hybrid retrieval | v0.3.0 | [v0.3.0.md](v0.3.0.md) | BM25 + e5-base RRF on test: MRR@10 0.776 (+0.059 [+0.053, +0.065] vs BM25) |
+| M3.1 Ablations | v0.3.1 | [v0.3.1.md](v0.3.1.md) | segmentation lifts vietnamese-sbert MRR@10 0.420 -> 0.510; RRF k = 10 adds +0.006 MRR on test |
 
 ## Template
 
