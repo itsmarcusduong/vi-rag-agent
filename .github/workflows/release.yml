@@ -26,7 +26,7 @@ jobs:
           SUBJECT: ${{ github.event.head_commit.message }}
         run: |
           subject="$(printf '%s' "$SUBJECT" | head -n 1)"
-          version="$(python scripts/release_notes.py "$subject" CHANGELOG.md notes.md)"
+          version="$(python scripts/release_notes.py "$subject" CHANGELOG.md notes.md $(git tag --list 'v*'))"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           if [ -n "$version" ]; then cat notes.md; else echo "Not a release commit."; fi
       - name: Create tag and release
