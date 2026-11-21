@@ -169,3 +169,30 @@ def bootstrap_ci(
     alpha = (1 - confidence) / 2
     low, high = np.quantile(means, [alpha, 1 - alpha])
     return float(low), float(high)
+
+
+def paired_difference(
+    per_query_a: Mapping[str, Mapping[str, float]],
+    per_query_b: Mapping[str, Mapping[str, float]],
+    metric: str,
+    seed: int = 0,
+) -> dict:
+    """Mean of (b - a) over the queries both systems were scored on, with a bootstrap 95% CI.
+
+    Pairing by query removes the between-query variance that dominates unpaired comparisons, so a
+    small but consistent gain can be distinguished from noise.
+    """
+    shared = sorted(set(per_query_a) & set(per_query_b))
+    if not shared:
+        raise ValueError("no shared queries")
+    diffs = [per_query_b[q][metric] - per_query_a[q][metric] for q in shared]
+    low, high = bootstrap_ci(diffs, seed=seed)
+    return {
+        "metric": metric,
+        "n": len(shared),
+        "mean_diff": sum(diffs) / len(diffs),
+        "ci95": [low, high],
+        "b_better": sum(d > 0 for d in diffs),
+        "a_better": sum(d < 0 for d in diffs),
+        "tied": sum(d == 0 for d in diffs),
+    }
