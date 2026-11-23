@@ -9,3 +9,4 @@ Changing a protocol after a run means writing a new protocol for a new run.
 |---|---|---|
 | M2-M3.1 | M2, M3, M3.1 | in issue bodies #3, #10, #18 (before this folder existed) |
 | [m4_rerank.md](m4_rerank.md) | M4 | yes (this PR, before the Kaggle run) |
+| [m5_generation.md](m5_generation.md) | M5 | yes (PR before the Kaggle run) |
