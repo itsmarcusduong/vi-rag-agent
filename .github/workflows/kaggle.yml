@@ -20,6 +20,9 @@ env:
   KAGGLE_USER: ${{ vars.KAGGLE_USERNAME || 'minhquangdng' }}
   POLL_SECONDS: 60
   MAX_POLLS: 170
+  # A kernel that never leaves QUEUED usually means no GPU quota/capacity: fail fast instead of
+  # waiting the full budget (run 44929179704 waited 170 min in QUEUED).
+  MAX_QUEUED_POLLS: 30
 
 jobs:
   run:
@@ -52,6 +55,9 @@ jobs:
           python scripts/kaggle_job.py build --job "$job" --sha "$GITHUB_SHA" --user "$KAGGLE_USER" --out kjob
           cat kjob/kernel-metadata.json
       - name: Push kernel
+        # "[kaggle fetch]" in the commit message: do not push a new version, only wait for and
+        # download the output of the kernel version already on Kaggle.
+        if: ${{ !contains(github.event.head_commit.message, '[kaggle fetch]') }}
         env:
           KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
         run: |
@@ -66,12 +72,19 @@ jobs:
           KERNEL: ${{ steps.build.outputs.kernel }}
         run: |
           sleep 30
+          queued=0
           for i in $(seq 1 "$MAX_POLLS"); do
             status="$(kaggle kernels status "$KERNEL" 2>&1 || true)"
             echo "[$i] $status"
             case "$(echo "$status" | tr '[:upper:]' '[:lower:]')" in
               *complete*) exit 0 ;;
               *error*|*cancel*|*fail*) echo "::error::Kernel did not complete"; exit 1 ;;
+              *queued*)
+                queued=$((queued + 1))
+                if [ "$queued" -gt "$MAX_QUEUED_POLLS" ]; then
+                  echo "::error::Kernel still QUEUED after $MAX_QUEUED_POLLS polls: check Kaggle GPU quota or running sessions, then push a commit marked [kaggle fetch] to collect the output later"
+                  exit 1
+                fi ;;
             esac
             sleep "$POLL_SECONDS"
           done

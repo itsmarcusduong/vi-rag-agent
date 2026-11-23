@@ -6,6 +6,7 @@ versioning: [SemVer](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Kaggle workflow: fail fast when a kernel stays QUEUED; `[kaggle fetch]` commits only download the existing kernel's output (#25).
 - `PLAN.md`, `docs/decisions/` (ADR-0001 to ADR-0004), `docs/protocols/`: solo-project workflow with protocols merged before runs (#21).
 
 ### Changed
