@@ -3,8 +3,9 @@
 Vietnamese retrieval-augmented generation (RAG) and agentic question answering, built so that every
 claim comes with a measurement.
 
-> **Status: work in progress (M3).** BM25, dense (FAISS) and hybrid (RRF) retrieval with measured results. Numbers in the table
-> below are filled in only from real runs committed under `results/` (see
+> **Status: v0.4.0 released; M5 (answer generation with open LLMs) in progress.** BM25, dense
+> (FAISS) and hybrid (RRF) retrieval and a reranking study are measured; answer generation is not
+> measured yet. Numbers below are filled in only from real runs committed under `results/` (see
 > [docs/EVALUATION.md](docs/EVALUATION.md)).
 
 ## Goals
@@ -77,15 +78,19 @@ ruff format --check .
 pytest
 ```
 
-Optional extras: `.[retrieval]`, `.[agent]`, `.[api]` (added as the milestones land).
+Optional extras: `.[retrieval]` (BM25, FAISS), `.[data]` (UIT-ViQuAD download), `.[dense]`
+(sentence-transformers encoders), `.[generation]` (4-bit LLM answering, GPU), `.[agent]`, `.[api]`.
+GPU experiments run on Kaggle from GitHub Actions; see [docs/KAGGLE.md](docs/KAGGLE.md).
 
 ## Project layout
 
 ```text
-src/vi_rag_agent/   library code (chunking today; retrieval, rerank, agent, api next)
-tests/              pytest suite
-docs/               roadmap and evaluation protocol
-.github/            CI workflow, PR and issue templates
+src/vi_rag_agent/   library: data loading, BM25, dense retrieval, RRF fusion, metrics, QA scoring, generation
+scripts/            one script per experiment (run_*.py), Kaggle job builder, release notes
+results/            JSON results of real runs (the only source of reported numbers)
+tests/              pytest suite (metrics checked against hand-computed values)
+docs/               evaluation protocol, experiment protocols, ADRs, milestone reports
+.github/            CI, eval, Kaggle and release workflows; PR and issue templates
 ```
 
 ## Roadmap and reports

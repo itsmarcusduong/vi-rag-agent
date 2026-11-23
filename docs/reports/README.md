@@ -36,5 +36,8 @@ When a release PR is merged, the release workflow links the matching report from
 ## Release procedure
 1. Move the `Unreleased` CHANGELOG entries under `## [X.Y.Z] - YYYY-MM-DD`.
 2. For a milestone release, add `docs/reports/vX.Y.0.md` and a row above.
-3. Open a PR titled `chore(release): vX.Y.Z`; squash-merge it. The `release` workflow creates the
+3. Update the top-level `README.md`: the **Status** line names the new release (checked by
+   `tests/test_readme.py`), and the Results section summarises the milestone with links to its
+   results file and report.
+4. Open a PR titled `chore(release): vX.Y.Z`; squash-merge it. The `release` workflow creates the
    annotated tag and the GitHub Release (pre-release while the version is 0.x).
