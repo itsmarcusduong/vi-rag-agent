@@ -25,6 +25,16 @@ Trước khi báo "xong" một việc, Claude phải làm đủ các bước sau
 4. **Gợi ý**: đề xuất ít nhất 2 hướng cải thiện kèm chi phí/lợi ích; nêu lựa chọn thay thế đã cân nhắc.
 5. **Không đồng ý khi cần**: nếu yêu cầu của người dùng có rủi ro hoặc có cách tốt hơn, nói rõ trước khi làm.
 
+## README luôn đúng hiện trạng
+README.md là trang đầu tiên người tuyển dụng đọc trên GitHub. Trong mỗi PR, Claude tự hỏi: "README còn đúng không?"
+và cập nhật trong cùng PR khi PR đó:
+- thêm kết quả mới vào `results/` (bảng Results, chỉ chép số từ JSON, có link file và report);
+- đóng milestone/release (dòng **Status** ghi đúng phiên bản mới nhất và milestone đang làm);
+- thêm hoặc đổi extra, lệnh chạy, script, workflow, cấu trúc thư mục, cách cài đặt (Quick start, Project layout);
+- đổi quyết định (ADR) làm thay đổi kiến trúc hoặc hệ thống được chọn.
+Nếu không cần sửa, ghi "README: no change needed (lý do)" trong phần Checks của PR.
+`tests/test_readme.py` chặn lỗi cơ bản (Status khớp CHANGELOG, đủ extras, link không gãy); test không thay thế việc đọc lại README.
+
 ## Quy trình (ADR-0004)
 Kế hoạch: `PLAN.md`. Quyết định: `docs/decisions/`. Giao thức thí nghiệm: `docs/protocols/` (merge vào `main` trước khi chạy).
 Cổng tái tạo: script thí nghiệm mới phải tái tạo số tham chiếu của milestone trước, lệch thì dừng.

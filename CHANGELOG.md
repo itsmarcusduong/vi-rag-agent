@@ -10,6 +10,12 @@ versioning: [SemVer](https://semver.org/).
   `generation.py` (prompts from the protocol, 4-bit `HFGenerator`), gold answers in the benchmark,
   `paired_cluster_difference` (bootstrap over passages), `scripts/run_generation.py` and the
   `m5_generation` Kaggle job. No generation results yet: not measured.
+- `tests/test_readme.py` (#32): fails when the README status misses the latest release, an extra is
+  undocumented or a relative link is broken.
+
+### Changed
+- README brought up to date (#32): status, extras, project layout. Rule for when README must change
+  added to `CLAUDE.md`, the PR template and the release procedure.
 
 ## [0.4.0] - 2026-11-24
 
