@@ -159,3 +159,51 @@ def test_paired_difference_identical_systems_is_zero():
 def test_paired_difference_without_shared_queries_raises():
     with pytest.raises(ValueError):
         paired_difference({"a": {"m": 1.0}}, {"b": {"m": 1.0}}, "m")
+
+
+def test_paired_cluster_difference_mean_and_group_count():
+    from vi_rag_agent.metrics import paired_cluster_difference
+
+    a = {"q1": {"m": 0.0}, "q2": {"m": 0.0}, "q3": {"m": 1.0}}
+    b = {"q1": {"m": 1.0}, "q2": {"m": 1.0}, "q3": {"m": 1.0}}
+    groups = {"q1": "p1", "q2": "p1", "q3": "p2"}
+    out = paired_cluster_difference(a, b, "m", groups)
+    # diffs 1, 1, 0 -> mean 2/3; two groups
+    assert out["mean_diff"] == pytest.approx(2 / 3)
+    assert out["n_groups"] == 2
+    # resampling whole groups: possible means are 1 (p1 twice), 0 (p2 twice), 2/3 (one each)
+    assert 0.0 <= out["ci95"][0] <= out["ci95"][1] <= 1.0
+
+
+def test_cluster_bootstrap_is_wider_than_naive_when_groups_are_correlated():
+    from vi_rag_agent.metrics import paired_cluster_difference
+
+    # 20 groups of 10 identical questions: effective sample size is 20, not 200
+    a = {f"q{i}": {"m": 0.0} for i in range(200)}
+    b = {f"q{i}": {"m": float((i // 10) % 2)} for i in range(200)}
+    groups = {f"q{i}": f"p{i // 10}" for i in range(200)}
+    clustered = paired_cluster_difference(a, b, "m", groups)
+    naive = paired_difference(a, b, "m")
+    width = lambda d: d["ci95"][1] - d["ci95"][0]  # noqa: E731
+    assert width(clustered) > 2 * width(naive)
+
+
+def test_paired_cluster_difference_requires_groups():
+    from vi_rag_agent.metrics import paired_cluster_difference
+
+    with pytest.raises(ValueError, match="no group"):
+        paired_cluster_difference({"q": {"m": 1.0}}, {"q": {"m": 0.0}}, "m", {})
+
+
+def test_cluster_bootstrap_weights_groups_by_size():
+    from vi_rag_agent.metrics import paired_cluster_difference
+
+    # group A: 9 questions with diff 1; group B: 1 question with diff 0.
+    # Resamples of 2 groups: AA -> 1, BB -> 0, AB -> 9/10 (question-weighted), AB with prob 1/2,
+    # so the expected resampled mean is 0.25 * 1 + 0.25 * 0 + 0.5 * 0.9 = 0.7 (0.5 if unweighted).
+    a = {f"q{i}": {"m": 0.0} for i in range(10)}
+    b = {f"q{i}": {"m": 1.0 if i < 9 else 0.0} for i in range(10)}
+    groups = {f"q{i}": "A" if i < 9 else "B" for i in range(10)}
+    out = paired_cluster_difference(a, b, "m", groups, n_resamples=20000)
+    assert out["mean_diff"] == pytest.approx(0.9)
+    assert out["bootstrap_mean"] == pytest.approx(0.7, abs=0.02)

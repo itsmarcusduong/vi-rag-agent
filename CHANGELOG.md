@@ -5,6 +5,12 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- M5 answer generation pipeline (#29): `qa.py` (SQuAD-style EM/F1 with NFC and syllable tokens),
+  `generation.py` (prompts from the protocol, 4-bit `HFGenerator`), gold answers in the benchmark,
+  `paired_cluster_difference` (bootstrap over passages), `scripts/run_generation.py` and the
+  `m5_generation` Kaggle job. No generation results yet: not measured.
+
 ## [0.4.0] - 2026-11-24
 
 M4: cross-encoder reranking. Report: `docs/reports/v0.4.0.md`.

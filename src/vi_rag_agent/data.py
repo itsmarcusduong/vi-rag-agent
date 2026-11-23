@@ -41,6 +41,7 @@ class RetrievalBenchmark:
     qrels: dict[str, dict[str, dict[str, int]]] = field(default_factory=dict)  # split -> qid -> rel
     answerable: dict[str, dict[str, bool]] = field(default_factory=dict)  # split -> qid -> bool
     passage_splits: dict[str, set[str]] = field(default_factory=dict)  # doc_id -> splits using it
+    answers: dict[str, dict[str, list[str]]] = field(default_factory=dict)  # split -> qid -> golds
 
     def subset(self, split: str, answerable: bool) -> tuple[dict[str, str], dict[str, dict]]:
         """Queries and qrels of one split, filtered by answerability."""
@@ -78,6 +79,7 @@ def build_benchmark(records_by_split: Mapping[str, Iterable[Mapping]]) -> Retrie
         bench.queries[split] = {}
         bench.qrels[split] = {}
         bench.answerable[split] = {}
+        bench.answers[split] = {}
         for record in records:
             text = unicodedata.normalize("NFC", record["context"]).strip()
             doc_id = passage_id(text)
@@ -91,6 +93,8 @@ def build_benchmark(records_by_split: Mapping[str, Iterable[Mapping]]) -> Retrie
             bench.queries[split][qid] = record["question"]
             bench.qrels[split][qid] = {doc_id: 1}
             bench.answerable[split][qid] = not bool(record["is_impossible"])
+            golds = (record.get("answers") or {}).get("text") or []
+            bench.answers[split][qid] = [g for g in golds if g and g.strip()]
     return bench
 
 
@@ -98,7 +102,7 @@ def load_viquad(splits: Iterable[str] = SPLITS) -> RetrievalBenchmark:  # pragma
     """Download ViQuAD 2.0 from the Hugging Face Hub (needs network and the ``data`` extra)."""
     from datasets import load_dataset
 
-    columns = ("id", "title", "context", "question", "is_impossible")
+    columns = ("id", "title", "context", "question", "is_impossible", "answers")
     records = {}
     for split in splits:
         ds = load_dataset(HF_DATASET, split=split).select_columns(list(columns))

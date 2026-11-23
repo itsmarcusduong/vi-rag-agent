@@ -196,3 +196,48 @@ def paired_difference(
         "a_better": sum(d < 0 for d in diffs),
         "tied": sum(d == 0 for d in diffs),
     }
+
+
+def paired_cluster_difference(
+    per_query_a: Mapping[str, Mapping[str, float]],
+    per_query_b: Mapping[str, Mapping[str, float]],
+    metric: str,
+    groups: Mapping[str, str],
+    n_resamples: int = 2000,
+    seed: int = 0,
+) -> dict:
+    """Mean of (b - a) over shared queries with a cluster bootstrap 95% CI.
+
+    Queries in the same group (e.g. questions about the same passage) are resampled together, so the
+    interval accounts for the correlation between them.
+    """
+    import numpy as np
+
+    shared = sorted(set(per_query_a) & set(per_query_b))
+    if not shared:
+        raise ValueError("no shared queries")
+    missing = [q for q in shared if q not in groups]
+    if missing:
+        raise ValueError(f"{len(missing)} queries have no group")
+    by_group: dict[str, list[float]] = {}
+    for q in shared:
+        by_group.setdefault(groups[q], []).append(per_query_b[q][metric] - per_query_a[q][metric])
+    keys = sorted(by_group)
+    sums = np.array([sum(by_group[k]) for k in keys])
+    counts = np.array([len(by_group[k]) for k in keys])
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(keys), size=(n_resamples, len(keys)))
+    means = sums[idx].sum(axis=1) / counts[idx].sum(axis=1)
+    low, high = np.quantile(means, [0.025, 0.975])
+    diffs = [per_query_b[q][metric] - per_query_a[q][metric] for q in shared]
+    return {
+        "metric": metric,
+        "n": len(shared),
+        "n_groups": len(keys),
+        "mean_diff": sum(diffs) / len(diffs),
+        "ci95": [float(low), float(high)],
+        "bootstrap_mean": float(means.mean()),
+        "b_better": sum(d > 0 for d in diffs),
+        "a_better": sum(d < 0 for d in diffs),
+        "tied": sum(d == 0 for d in diffs),
+    }

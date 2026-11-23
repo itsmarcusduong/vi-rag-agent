@@ -62,3 +62,18 @@ def test_passage_id_is_stable_and_normalised():
 def test_duplicate_question_id_in_a_split_raises():
     with pytest.raises(ValueError):
         build_benchmark({"train": [rec("1", CTX_A, "a"), rec("1", CTX_B, "b")]})
+
+
+def test_gold_answers_are_kept_and_empty_ones_dropped():
+    records = {
+        "validation": [
+            {
+                **rec("1", CTX_A, "Thủ đô?"),
+                "answers": {"text": ["Hà Nội", " "], "answer_start": [0, 0]},
+            },
+            rec("2", CTX_B, "Không có đáp án?", impossible=True),
+        ]
+    }
+    bench = build_benchmark(records)
+    assert bench.answers["validation"]["validation:1"] == ["Hà Nội"]
+    assert bench.answers["validation"]["validation:2"] == []
