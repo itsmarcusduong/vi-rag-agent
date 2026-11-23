@@ -115,6 +115,10 @@ jobs:
           if git diff --cached --quiet; then
             echo "Results identical to the committed version."
           else
-            git commit -m "results(${{ steps.build.outputs.job }}): Kaggle run for ${GITHUB_SHA::7}"
+            msg="results(${{ steps.build.outputs.job }}): Kaggle run for ${GITHUB_SHA::7}"
+            case "${{ github.event.head_commit.message }}" in
+              *"[kaggle fetch]"*) msg="results(${{ steps.build.outputs.job }}): fetched existing Kaggle output (code commit recorded in the JSON)" ;;
+            esac
+            git commit -m "$msg"
             git push
           fi

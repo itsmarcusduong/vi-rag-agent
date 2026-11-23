@@ -6,6 +6,7 @@ versioning: [SemVer](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- `scripts/run_rerank.py` (Kaggle job `m4_rerank`, #23): reranking experiment with stage status and reproduction gate; `results/m4_rerank.json`; ADR-0005; report `docs/reports/v0.4.0.md`.
 - Kaggle workflow: fail fast when a kernel stays QUEUED; `[kaggle fetch]` commits only download the existing kernel's output (#25).
 - `PLAN.md`, `docs/decisions/` (ADR-0001 to ADR-0004), `docs/protocols/`: solo-project workflow with protocols merged before runs (#21).
 
