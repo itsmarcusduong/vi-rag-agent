@@ -25,6 +25,11 @@ must write its results under `results/` and record the commit and environment.
 Put the marker `[skip kaggle]` in the commit message of docs-only commits. The workflow checks the
 message of the pushed head commit only, so never quote the marker in a commit that should run.
 
+## Kernel stuck in QUEUED, or finished after the workflow gave up
+The workflow fails after 30 polls in `QUEUED` (no GPU quota or capacity). The kernel may still run later
+on Kaggle. To collect its output without starting a new version, push a commit whose message contains
+`[kaggle fetch]` to the same `kaggle/<job>` branch.
+
 ## What runs where
 - Kernels are private. They clone this public repository at the exact commit, install the package,
   run the script, and copy only the declared result files to the Kaggle output.
