@@ -6,8 +6,8 @@ Follows docs/protocols/m4_rerank.md (merged before this run, issue #23). Stages:
   3. validate  - every reranker on validation; eligibility (p95 latency) and selection
   4. test      - R0 and the selected reranker on test and test-unseen; decision rule
 Writes results/m4_rerank.json with a stage_status block; exits 1 if a stage fails.
-Metric cut-offs come from run_dense.score (1, 5, 10, 20, 100); the protocol's recall@50 was therefore
-not reported (deviation recorded in docs/reports/v0.4.0.md).
+Metric cut-offs come from run_dense.score (1, 5, 10, 20, 100); the protocol's recall@50 was
+therefore not reported (deviation recorded in docs/reports/v0.4.0.md).
 """
 
 from __future__ import annotations
