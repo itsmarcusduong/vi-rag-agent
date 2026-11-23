@@ -1,0 +1,346 @@
+{
+  "experiment": "m4_rerank",
+  "issue": 23,
+  "protocol": "docs/protocols/m4_rerank.md",
+  "created_utc": "2026-11-21T20:37:29+00:00",
+  "git_commit": "5d36348bbc9ada40b194595cbe66d70d4a665a92",
+  "package_version": "0.1.0",
+  "stage_status": {
+    "load": "OK",
+    "gate": "OK",
+    "validate": "OK",
+    "test": "OK"
+  },
+  "first_stage": {
+    "e5": {
+      "passages_truncated": 0.0079,
+      "encode_passages_s": 80.2,
+      "encode_queries_s": 26.1,
+      "embedding_dim": 768,
+      "max_seq_length": 512
+    },
+    "rrf_k": 10,
+    "depth": 100
+  },
+  "query_set_sizes": {
+    "validation/answerable": 2653,
+    "validation/unanswerable": 1161,
+    "test/answerable": 7301,
+    "test_unseen/answerable": 5181
+  },
+  "dataset": {
+    "hf_id": "taidng/UIT-ViQuAD2.0",
+    "n_passages": 5317,
+    "n_titles": 184,
+    "passages_in_more_than_one_split": 582,
+    "splits": {
+      "train": {
+        "questions": 28454,
+        "answerable": 19238,
+        "unanswerable": 9216,
+        "passages": 4101
+      },
+      "validation": {
+        "questions": 3814,
+        "answerable": 2653,
+        "unanswerable": 1161,
+        "passages": 557
+      },
+      "test": {
+        "questions": 7301,
+        "answerable": 7301,
+        "unanswerable": 0,
+        "passages": 1241
+      }
+    }
+  },
+  "reproduction_gate": {
+    "target_mrr@10": 0.8054,
+    "reproduced_mrr@10": 0.8054
+  },
+  "validation": {
+    "R0": {
+      "n_queries": 2653,
+      "n_missing_from_run": 0,
+      "metrics": {
+        "recall@1": 0.7165,
+        "recall@5": 0.9208,
+        "recall@10": 0.9567,
+        "recall@20": 0.9763,
+        "recall@100": 0.994,
+        "hit@1": 0.7165,
+        "hit@5": 0.9208,
+        "hit@10": 0.9567,
+        "hit@20": 0.9763,
+        "hit@100": 0.994,
+        "mrr@10": 0.8054,
+        "ndcg@10": 0.8426
+      },
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.9099,
+          0.9318
+        ],
+        "recall@10": [
+          0.9487,
+          0.9646
+        ],
+        "mrr@10": [
+          0.7926,
+          0.8183
+        ]
+      }
+    },
+    "R1": {
+      "n_queries": 2653,
+      "n_missing_from_run": 0,
+      "metrics": {
+        "recall@1": 0.4497,
+        "recall@5": 0.6924,
+        "recall@10": 0.8021,
+        "recall@20": 0.8975,
+        "recall@100": 0.994,
+        "hit@1": 0.4497,
+        "hit@5": 0.6924,
+        "hit@10": 0.8021,
+        "hit@20": 0.8975,
+        "hit@100": 0.994,
+        "mrr@10": 0.5561,
+        "ndcg@10": 0.6147
+      },
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.6751,
+          0.7105
+        ],
+        "recall@10": [
+          0.7874,
+          0.8179
+        ],
+        "mrr@10": [
+          0.5403,
+          0.5727
+        ]
+      },
+      "model": "cross-encoder/ms-marco-MiniLM-L6-v2",
+      "license": "Apache-2.0",
+      "dtype": "torch.float16",
+      "latency": {
+        "p50_ms": 99.48,
+        "p95_ms": 103.33,
+        "n": 2653
+      },
+      "eligible": true,
+      "paired_vs_R0": {
+        "recall@10": {
+          "mean_diff": -0.1545,
+          "ci95": [
+            -0.1685,
+            -0.1395
+          ],
+          "better": 24,
+          "worse": 434,
+          "tied": 2195
+        },
+        "mrr@10": {
+          "mean_diff": -0.2493,
+          "ci95": [
+            -0.2651,
+            -0.2334
+          ],
+          "better": 224,
+          "worse": 1234,
+          "tied": 1195
+        }
+      }
+    },
+    "R2": {
+      "n_queries": 2653,
+      "n_missing_from_run": 0,
+      "metrics": {
+        "recall@1": 0.8692,
+        "recall@5": 0.9721,
+        "recall@10": 0.9849,
+        "recall@20": 0.9887,
+        "recall@100": 0.994,
+        "hit@1": 0.8692,
+        "hit@5": 0.9721,
+        "hit@10": 0.9849,
+        "hit@20": 0.9887,
+        "hit@100": 0.994,
+        "mrr@10": 0.9154,
+        "ndcg@10": 0.9327
+      },
+      "ci95_bootstrap": {
+        "recall@5": [
+          0.9657,
+          0.9781
+        ],
+        "recall@10": [
+          0.98,
+          0.9894
+        ],
+        "mrr@10": [
+          0.9067,
+          0.9241
+        ]
+      },
+      "model": "BAAI/bge-reranker-v2-m3",
+      "license": "Apache-2.0",
+      "dtype": "torch.float16",
+      "latency": {
+        "p50_ms": 993.11,
+        "p95_ms": 1030.63,
+        "n": 2653
+      },
+      "eligible": false,
+      "paired_vs_R0": {
+        "recall@10": {
+          "mean_diff": 0.0283,
+          "ci95": [
+            0.0211,
+            0.0354
+          ],
+          "better": 80,
+          "worse": 5,
+          "tied": 2568
+        },
+        "mrr@10": {
+          "mean_diff": 0.11,
+          "ci95": [
+            0.0993,
+            0.1208
+          ],
+          "better": 606,
+          "worse": 104,
+          "tied": 1943
+        }
+      }
+    }
+  },
+  "selection": {
+    "selected": "R0",
+    "eligible": [
+      "R1"
+    ],
+    "reason": "only eligible reranker; but it does not beat R0 on validation (CI not above 0)"
+  },
+  "held_out": {
+    "test/answerable": {
+      "R0": {
+        "n_queries": 7301,
+        "n_missing_from_run": 0,
+        "metrics": {
+          "recall@1": 0.6915,
+          "recall@5": 0.9008,
+          "recall@10": 0.9429,
+          "recall@20": 0.9659,
+          "recall@100": 0.989,
+          "hit@1": 0.6915,
+          "hit@5": 0.9008,
+          "hit@10": 0.9429,
+          "hit@20": 0.9659,
+          "hit@100": 0.989,
+          "mrr@10": 0.7817,
+          "ndcg@10": 0.8212
+        },
+        "ci95_bootstrap": {
+          "recall@5": [
+            0.894,
+            0.9074
+          ],
+          "recall@10": [
+            0.9377,
+            0.9481
+          ],
+          "mrr@10": [
+            0.7735,
+            0.789
+          ]
+        }
+      }
+    },
+    "test_unseen/answerable": {
+      "R0": {
+        "n_queries": 5181,
+        "n_missing_from_run": 0,
+        "metrics": {
+          "recall@1": 0.6782,
+          "recall@5": 0.8942,
+          "recall@10": 0.9394,
+          "recall@20": 0.9633,
+          "recall@100": 0.9886,
+          "hit@1": 0.6782,
+          "hit@5": 0.8942,
+          "hit@10": 0.9394,
+          "hit@20": 0.9633,
+          "hit@100": 0.9886,
+          "mrr@10": 0.7713,
+          "ndcg@10": 0.8124
+        },
+        "ci95_bootstrap": {
+          "recall@5": [
+            0.8859,
+            0.9023
+          ],
+          "recall@10": [
+            0.9328,
+            0.9454
+          ],
+          "mrr@10": [
+            0.7616,
+            0.7807
+          ]
+        }
+      }
+    },
+    "validation/unanswerable": {
+      "R0": {
+        "n_queries": 1161,
+        "n_missing_from_run": 0,
+        "metrics": {
+          "recall@1": 0.6227,
+          "recall@5": 0.8536,
+          "recall@10": 0.9027,
+          "recall@20": 0.9354,
+          "recall@100": 0.9793,
+          "hit@1": 0.6227,
+          "hit@5": 0.8536,
+          "hit@10": 0.9027,
+          "hit@20": 0.9354,
+          "hit@100": 0.9793,
+          "mrr@10": 0.7233,
+          "ndcg@10": 0.7671
+        },
+        "ci95_bootstrap": {
+          "recall@5": [
+            0.8329,
+            0.8734
+          ],
+          "recall@10": [
+            0.8854,
+            0.9199
+          ],
+          "mrr@10": [
+            0.7015,
+            0.7452
+          ]
+        }
+      },
+      "note": "exploratory"
+    }
+  },
+  "decision": {
+    "adopt": false,
+    "reranker": null,
+    "rule": "paired ΔMRR@10 vs R0 with CI95 above 0 on test and test-unseen"
+  },
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "device": "cuda",
+    "gpu": "Tesla T4",
+    "runner": "kaggle"
+  },
+  "wall_time_s": 3008.8
+}
