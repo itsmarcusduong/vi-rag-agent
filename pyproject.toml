@@ -16,6 +16,8 @@ dependencies = []
 retrieval = ["numpy>=1.24", "scipy>=1.10", "faiss-cpu>=1.8"]
 dense = ["sentence-transformers>=3.0", "pyvi>=0.1.1"]
 data = ["datasets>=2.18"]
+# M5: pinned so the four-bit runs are comparable (docs/protocols/m5_generation.md).
+generation = ["transformers==5.24.0", "bitsandbytes==0.50.2", "accelerate>=1.0"]
 agent = ["langgraph", "langchain-core"]
 api = ["fastapi", "uvicorn[standard]", "pydantic"]
 dev = ["pytest", "pytest-cov", "ruff"]

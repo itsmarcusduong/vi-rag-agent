@@ -58,6 +58,11 @@ def test_every_experiment_script_is_registered():
     # Guards against adding scripts/run_*.py and forgetting the registry entry (happened for M4).
     root = Path(__file__).parents[1]
     registered = {job.script for job in kaggle_job.JOBS.values()}
-    gpu_scripts = {"scripts/run_dense.py", "scripts/run_ablation_m3.py", "scripts/run_rerank.py"}
+    gpu_scripts = {
+        "scripts/run_dense.py",
+        "scripts/run_ablation_m3.py",
+        "scripts/run_rerank.py",
+        "scripts/run_generation.py",
+    }
     missing = {s for s in gpu_scripts if (root / s).exists()} - registered
     assert not missing, f"not registered as Kaggle jobs: {sorted(missing)}"
