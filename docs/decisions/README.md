@@ -10,3 +10,4 @@ ADR-0001 to ADR-0003 were written on 2026-11-22 to record decisions already in f
 | [0002](ADR-0002-kaggle-bridge.md) | GPU experiments on Kaggle from GitHub Actions | Accepted (retrospective) |
 | [0003](ADR-0003-retriever.md) | Retriever: BM25 + multilingual-e5-base, RRF k = 10 | Accepted (retrospective) |
 | [0004](ADR-0004-solo-workflow.md) | Solo-project workflow: protocols before runs, reproduction gate, conventions | Accepted |
+| [0005](ADR-0005-no-reranker.md) | No reranker on top of the hybrid (M4) | Accepted |

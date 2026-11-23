@@ -52,3 +52,12 @@ def test_info_prints_kernel_gpu_and_outputs(capsys):
     assert kaggle_job.main(["info", "--job", "m2_bm25", "--user", "u"]) == 0
     out = capsys.readouterr().out.splitlines()
     assert out == ["kernel=u/vi-rag-agent-m2-bm25", "gpu=false", "outputs=results/m2_bm25.json"]
+
+
+def test_every_experiment_script_is_registered():
+    # Guards against adding scripts/run_*.py and forgetting the registry entry (happened for M4).
+    root = Path(__file__).parents[1]
+    registered = {job.script for job in kaggle_job.JOBS.values()}
+    gpu_scripts = {"scripts/run_dense.py", "scripts/run_ablation_m3.py", "scripts/run_rerank.py"}
+    missing = {s for s in gpu_scripts if (root / s).exists()} - registered
+    assert not missing, f"not registered as Kaggle jobs: {sorted(missing)}"

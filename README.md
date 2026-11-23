@@ -62,6 +62,10 @@ that comparison may be unfair to them (confirmed in [M3.1](docs/reports/v0.3.1.m
 from 0.420 to 0.510 MRR@10, still below BM25; tuning RRF to k = 10 adds +0.006 MRR on test). Caveats: small corpus, one gold passage per question (recall is a
 lower bound), and the test split marks every question as answerable.
 
+**Reranking (M4, [report](docs/reports/v0.4.0.md)).** On validation, the English `ms-marco-MiniLM-L6-v2` reranker
+lowers MRR@10 by 0.249; the multilingual `bge-reranker-v2-m3` raises it by 0.110 (to 0.915) but takes
+1031 ms (p95) per question on a T4, above the pre-registered 300 ms limit, so no reranker is used for now.
+
 ## Quick start (development)
 
 ```powershell
