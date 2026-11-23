@@ -5,6 +5,13 @@ versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-24
+
+M4: cross-encoder reranking. Report: `docs/reports/v0.4.0.md`.
+
+### Results
+- English `ms-marco-MiniLM-L6-v2` reranker lowers validation MRR@10 by 0.249; `bge-reranker-v2-m3` raises it by 0.110 but its p95 latency (1,031 ms on a T4) exceeds the 300 ms limit: no reranker adopted (ADR-0005).
+
 ### Added
 - `scripts/run_rerank.py` (Kaggle job `m4_rerank`, #23): reranking experiment with stage status and reproduction gate; `results/m4_rerank.json`; ADR-0005; report `docs/reports/v0.4.0.md`.
 - Kaggle workflow: fail fast when a kernel stays QUEUED; `[kaggle fetch]` commits only download the existing kernel's output (#25).
