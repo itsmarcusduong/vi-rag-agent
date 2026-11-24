@@ -233,6 +233,13 @@ def main() -> int:
         val_ids = sample_ids([q for q in val_q if golds.get(q)], VAL_N, rng)
         test_ids = sample_ids([q for q in test_q if golds.get(q)], TEST_N, rng)
         unseen = [q for q in test_ids if "train" not in bench.passage_splits[gold_passage[q]]]
+        payload["gold_answers"] = {
+            split: {"answerable": len(qs), "with_gold": sum(1 for q in qs if golds.get(q))}
+            for split, qs in (("validation", val_q), ("test", test_q))
+        }
+        for split, ids in (("validation", val_ids), ("test", test_ids)):
+            if not ids:  # fail before any GPU work, not after hours of generation
+                raise ValueError(f"no answerable {split} questions with gold answers")
         questions = {**val_q, **test_q}
 
         bm25 = BM25Retriever(doc_ids, texts, BM25Params(1.5, 0.75))

@@ -210,3 +210,20 @@ def test_select_model_single_candidate():
 )
 def test_contains_zero(ci, expected):
     assert rg.contains_zero(ci) is expected
+
+
+def test_missing_test_answers_fail_at_load(run, monkeypatch):
+    # The public test split may ship without gold answers: stop before any generation.
+    def no_test_answers():
+        bench = fake_bench()
+        bench.answers["test"] = {q: [] for q in bench.answers["test"]}
+        return bench
+
+    monkeypatch.setattr(rg, "load_viquad", no_test_answers)
+    code, out = run(target=-1.0)
+    assert code == 1
+    assert (
+        out["stage_status"]["load"].startswith("FAILED") and "test" in out["stage_status"]["load"]
+    )
+    assert out["gold_answers"]["test"]["with_gold"] == 0
+    assert "stage_a" not in out

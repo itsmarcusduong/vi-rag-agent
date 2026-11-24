@@ -14,6 +14,10 @@ versioning: [SemVer](https://semver.org/).
   undocumented or a relative link is broken.
 
 ### Changed
+- Kaggle kernels copy declared outputs even when the script fails (#29); the first M5 run lost its
+  stage A/B results this way.
+- `run_generation.py` records how many questions have gold answers and stops at load if a sample is
+  empty (#29).
 - Kaggle workflow prints the last 200 lines of the kernel log (#29), so a failed run can be read
   without downloading the artifact.
 - README brought up to date (#32): status, extras, project layout. Rule for when README must change

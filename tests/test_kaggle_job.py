@@ -66,3 +66,14 @@ def test_every_experiment_script_is_registered():
     }
     missing = {s for s in gpu_scripts if (root / s).exists()} - registered
     assert not missing, f"not registered as Kaggle jobs: {sorted(missing)}"
+
+
+def test_outputs_are_copied_even_when_the_script_fails(tmp_path):
+    # M5 lost its stage A/B results because the copy ran only after a successful script.
+    code = (kaggle_job.build("m5_generation", SHA, "u", tmp_path / "k") / "run.py").read_text(
+        "utf-8"
+    )
+    tries = [n for n in ast.walk(ast.parse(code)) if isinstance(n, ast.Try)]
+    assert any(
+        "SCRIPT" in ast.unparse(t.body) and "shutil.copy" in ast.unparse(t.finalbody) for t in tries
+    )
