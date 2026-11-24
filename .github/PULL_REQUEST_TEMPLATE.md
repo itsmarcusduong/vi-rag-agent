@@ -22,4 +22,5 @@ Closes #
 ## Checklist
 - [ ] No data, secrets, `.env`, checkpoints or indexes committed
 - [ ] Docs / CHANGELOG updated (ADR if a rule or architecture changed)
+- [ ] README still accurate: status, results table, extras, commands, layout (or "README: no change needed" with the reason)
 - [ ] Conventional Commit title with `(#n)`

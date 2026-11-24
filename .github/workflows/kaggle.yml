@@ -97,6 +97,9 @@ jobs:
           mkdir -p kout
           kaggle kernels output "${{ steps.build.outputs.kernel }}" -p kout || true
           find kout -maxdepth 3 -type f | head -50
+      - name: Show kernel log tail
+        if: always()
+        run: python scripts/kaggle_log_tail.py kout 200
       - uses: actions/upload-artifact@v4
         if: always()
         with:
