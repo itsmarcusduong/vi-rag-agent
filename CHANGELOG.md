@@ -14,6 +14,8 @@ versioning: [SemVer](https://semver.org/).
   undocumented or a relative link is broken.
 
 ### Changed
+- Kaggle workflow prints the last 200 lines of the kernel log (#29), so a failed run can be read
+  without downloading the artifact.
 - README brought up to date (#32): status, extras, project layout. Rule for when README must change
   added to `CLAUDE.md`, the PR template and the release procedure.
 
