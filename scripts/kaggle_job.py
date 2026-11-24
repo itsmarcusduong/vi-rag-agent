@@ -82,11 +82,16 @@ sh("git", "clone", "--quiet", REPO_URL, "/tmp/repo")
 os.chdir("/tmp/repo")
 sh("git", "checkout", "--quiet", SHA)
 sh(sys.executable, "-m", "pip", "install", "--quiet", "-e", ".[" + EXTRAS + "]")
-sh(sys.executable, SCRIPT)
-os.makedirs("/kaggle/working/results", exist_ok=True)
-for path in OUTPUTS:
-    shutil.copy(path, "/kaggle/working/results/")
-    print("saved", path, flush=True)
+try:
+    sh(sys.executable, SCRIPT)
+finally:  # keep partial results (with stage_status) even when the script fails
+    os.makedirs("/kaggle/working/results", exist_ok=True)
+    for path in OUTPUTS:
+        if os.path.exists(path):
+            shutil.copy(path, "/kaggle/working/results/")
+            print("saved", path, flush=True)
+        else:
+            print("missing", path, flush=True)
 '''
 
 
